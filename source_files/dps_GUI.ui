@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1156</width>
-    <height>654</height>
+    <width>1289</width>
+    <height>463</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -46,28 +46,6 @@
     <item row="0" column="0" rowspan="5">
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="QComboBox" name="comboBox_datarate">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>130</width>
-          <height>30</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>130</width>
-          <height>30</height>
-         </size>
-        </property>
-       </widget>
-      </item>
-      <item>
        <layout class="QHBoxLayout" name="horizontalLayout_6">
         <item>
          <widget class="QLabel" name="label">
@@ -90,9 +68,22 @@
            </size>
           </property>
           <property name="text">
-           <string>Slave Address</string>
+           <string>Modbus #</string>
           </property>
          </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_7">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
         </item>
         <item>
          <widget class="QLineEdit" name="lineEdit_slave_addr">
@@ -125,12 +116,38 @@
        </layout>
       </item>
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="1,4">
+       <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="0,1,0,0">
         <item>
-         <widget class="QComboBox" name="COMPortsComboBox"/>
+         <widget class="QLabel" name="label_26">
+          <property name="text">
+           <string>COM</string>
+          </property>
+         </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="RefreshPushButton">
+         <widget class="QComboBox" name="COMPortsComboBox">
+          <item>
+           <property name="text">
+            <string>...</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_10">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QToolButton" name="RefreshToolButton">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>12</horstretch>
@@ -140,40 +157,96 @@
           <property name="text">
            <string>Rescan</string>
           </property>
-          <property name="flat">
-           <bool>false</bool>
-          </property>
          </widget>
         </item>
        </layout>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_connect">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="minimumSize">
-         <size>
-          <width>130</width>
-          <height>30</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>130</width>
-          <height>30</height>
-         </size>
-        </property>
-        <property name="text">
-         <string>Connect</string>
-        </property>
-        <property name="checkable">
-         <bool>true</bool>
-        </property>
-       </widget>
+       <layout class="QHBoxLayout" name="horizontalLayout_15">
+        <item>
+         <widget class="QLabel" name="label_28">
+          <property name="text">
+           <string>Baud Rate</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_11">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QComboBox" name="comboBox_datarate">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>130</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>130</width>
+            <height>30</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_9">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton_connect">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>130</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>130</width>
+            <height>30</height>
+           </size>
+          </property>
+          <property name="text">
+           <string>Connect</string>
+          </property>
+          <property name="checkable">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
       <item>
        <spacer name="verticalSpacer_3">
@@ -717,7 +790,7 @@
            <string/>
           </property>
           <property name="pixmap">
-           <pixmap>icon/led_off.png</pixmap>
+           <pixmap>../../../../../../XYGUI/source_files/icon/led_off.png</pixmap>
           </property>
          </widget>
         </item>
@@ -777,7 +850,7 @@
            <string/>
           </property>
           <property name="pixmap">
-           <pixmap>icon/led_off.png</pixmap>
+           <pixmap>../../../../../../XYGUI/source_files/icon/led_off.png</pixmap>
           </property>
          </widget>
         </item>
@@ -1138,7 +1211,7 @@
          </size>
         </property>
         <property name="currentIndex">
-         <number>0</number>
+         <number>1</number>
         </property>
         <widget class="QWidget" name="tab_1">
          <attribute name="title">
@@ -1356,6 +1429,11 @@
            </layout>
           </item>
          </layout>
+        </widget>
+        <widget class="QWidget" name="tab">
+         <attribute name="title">
+          <string>E-load</string>
+         </attribute>
         </widget>
         <widget class="QWidget" name="tab_2">
          <attribute name="title">
@@ -2041,7 +2119,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1156</width>
+     <width>1289</width>
      <height>26</height>
     </rect>
    </property>

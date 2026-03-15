@@ -6,6 +6,7 @@ import time
 #import os
 import csv
 import datetime
+from pathlib import Path
 
 from dps_modbus import Serial_modbus
 from dps_modbus import Dps5005
@@ -23,6 +24,11 @@ import numpy as np
 
 dps = 0
 dps_mode = 0 # 0 PSU default, 1 nicad, 2 li-ion, 3 CSV, 
+
+
+def app_path(*parts):
+	base_path = Path(getattr(sys, '_MEIPASS', Path(__file__).resolve().parent))
+	return str(base_path.joinpath(*parts))
 
 
 class WorkerSignals(QObject):
@@ -62,12 +68,12 @@ class Worker(QRunnable):
 
 class dps_GUI(QMainWindow):
 	def __init__(self):
-		self.limits = Import_limits("dps5005_limits.ini")
+		self.limits = Import_limits(app_path("dps5005_limits.ini"))
 			
 		pg.setConfigOption('background', self.limits.background_colour)
 			
 		super(dps_GUI,self).__init__()
-		loadUi('dps_GUI.ui', self)
+		loadUi(app_path('dps_GUI.ui'), self)
 		
 		self.setWindowTitle('XY6015L_pyGUI')
 		
@@ -155,8 +161,8 @@ class dps_GUI(QMainWindow):
 		self.dial_curr.setMaximum(int(self.limits.current_set_max * 10 ** self.limits.decimals_iset))
 		
 	#--- icons
-		self.pix_on=QPixmap("icon/led_on.png")
-		self.pix_off=QPixmap("icon/led_off.png")
+		self.pix_on=QPixmap(app_path("icon", "led_on.png"))
+		self.pix_off=QPixmap(app_path("icon", "led_off.png"))
 	
 	def closeEvent(self, event):    
 		self.shutdown() # switch OFF output when application closes to prevent unmonitored charging
@@ -705,7 +711,8 @@ class dps_GUI(QMainWindow):
 						slave_addr = abs(int(self.lineEdit_slave_addr.text()))
 						ser = Serial_modbus(port, slave_addr, baudrate, 8)
 						dps = Dps5005(ser, self.limits) #example '/dev/ttyUSB0', 1, 9600, 8)
-						if dps.version() != '':
+						version = dps.version()
+						if version not in (False, None, ''):
 							self.serialconnected = True
 							self.pushButton_connect.setText("Connected")
 							self.timer.start()
@@ -726,7 +733,8 @@ class dps_GUI(QMainWindow):
 					slave_addr = abs(int(self.lineEdit_slave_addr.text()))
 					ser = Serial_modbus(self.limits.port_set, slave_addr, baudrate, 8)
 					dps = Dps5005(ser, self.limits) #example '/dev/ttyUSB0', 1, 9600, 8)
-					if dps.version() != '':
+					version = dps.version()
+					if version not in (False, None, ''):
 						self.serialconnected = True
 						self.pushButton_connect.setText("Connected")
 						self.timer.start()
