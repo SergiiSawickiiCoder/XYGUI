@@ -101,7 +101,7 @@ pip3 install -r requirements.txt
 * dps_modbus.py      - Python 2.7.14
 * dps5005_limits.ini - text file
 
-## Download & run:
+## Run:
 
 ```
 cd DPS5005_pyGUI/source_files/
@@ -112,4 +112,8 @@ python dps_GUI_program.py
 OR
 ```
 python3 dps_GUI_program.py
+```
+OR on Windows
+```
+run_program.bat
 ```

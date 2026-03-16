@@ -2,10 +2,10 @@
 
 
 a = Analysis(
-    ['C:\\Users\\GANS\\OneDrive\\Desktop\\1\\схеми\\XYGUI\\source_files\\dps_GUI_program.py'],
+    ['source_files\\dps_GUI_program.py'],
     pathex=[],
     binaries=[],
-    datas=[('C:\\Users\\GANS\\OneDrive\\Desktop\\1\\схеми\\XYGUI\\source_files\\dps_GUI.ui', '.'), ('C:\\Users\\GANS\\OneDrive\\Desktop\\1\\схеми\\XYGUI\\source_files\\dps5005_limits.ini', '.'), ('C:\\Users\\GANS\\OneDrive\\Desktop\\1\\схеми\\XYGUI\\source_files\\icon', 'icon')],
+    datas=[('source_files\\dps_GUI.ui', '.'), ('source_files\\connection_dialog.ui', '.'), ('source_files\\dps5005_limits.ini', '.'), ('source_files\\icon', 'icon')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
