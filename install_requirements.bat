@@ -5,29 +5,42 @@ set "ROOT_DIR=%~dp0"
 set "PYTHON_EXE="
 cd /d "%ROOT_DIR%source_files"
 
-if exist "%LocalAppData%\Programs\Python\Python313\python.exe" set "PYTHON_EXE=%LocalAppData%\Programs\Python\Python313\python.exe"
-if not defined PYTHON_EXE if exist "%LocalAppData%\Programs\Python\Python312\python.exe" set "PYTHON_EXE=%LocalAppData%\Programs\Python\Python312\python.exe"
-if not defined PYTHON_EXE if exist "%LocalAppData%\Programs\Python\Python311\python.exe" set "PYTHON_EXE=%LocalAppData%\Programs\Python\Python311\python.exe"
-
-if not defined PYTHON_EXE (
-    where py >nul 2>nul
-    if %errorlevel%==0 set "PYTHON_EXE=py -3"
-)
-
-if not defined PYTHON_EXE (
-    where python >nul 2>nul
-    if %errorlevel%==0 set "PYTHON_EXE=python"
-)
-
+call :find_python
 if not defined PYTHON_EXE goto :python_not_found
 
-call %PYTHON_EXE% -m ensurepip --upgrade >nul 2>nul
-call %PYTHON_EXE% -m pip install -r requirements.txt
+call "%PYTHON_EXE%" -m ensurepip --upgrade >nul 2>nul
+call "%PYTHON_EXE%" -m pip install -r requirements.txt
 goto :end
 
+:find_python
+for /d %%D in ("%LocalAppData%\Programs\Python\Python*") do (
+    if exist "%%~fD\python.exe" set "PYTHON_EXE=%%~fD\python.exe"
+)
+if defined PYTHON_EXE exit /b 0
+
+for /d %%D in ("%ProgramFiles%\Python*") do (
+    if exist "%%~fD\python.exe" set "PYTHON_EXE=%%~fD\python.exe"
+)
+if defined PYTHON_EXE exit /b 0
+
+where python >nul 2>nul
+if not errorlevel 1 (
+    python -c "import sys; raise SystemExit(0 if sys.version_info[0] == 3 else 1)" >nul 2>nul
+    if not errorlevel 1 (
+        for /f "delims=" %%I in ('python -c "import sys; print(sys.executable)" 2^>nul') do set "PYTHON_EXE=%%I"
+        exit /b 0
+    )
+)
+
+where py >nul 2>nul
+if not errorlevel 1 (
+    for /f "delims=" %%I in ('py -3 -c "import sys; print(sys.executable)" 2^>nul') do set "PYTHON_EXE=%%I"
+)
+exit /b 0
+
 :python_not_found
-echo Python not found.
-echo Install Python 3.13 or 3.12 and then run this file again.
+echo Python 3 not found.
+echo Install any supported Python 3 version and then run this file again.
 pause
 
 :end
