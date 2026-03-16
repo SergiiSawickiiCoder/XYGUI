@@ -2,3 +2,5 @@ Ignore
 source_files/minimalmodbus.py
 source_files/__pycache__
 __pycache__/
+screenshots/
+.venv/
