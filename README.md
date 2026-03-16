@@ -13,7 +13,7 @@ Cross-platform PyQt5 desktop application for monitoring and controlling an `XY60
 - Supports basic PSU mode, NiMH/NiCad mode, and Li-Ion/LiPo mode
 - Can lock front-panel buttons on supported hardware
 
-<img src="images/ProgramConnected.png">
+<img src="images/current_ui.jpg">
 
 ## Project status
 
@@ -74,12 +74,15 @@ Inside the app:
 - open `Connection -> Connection...`
 - choose baud rate and slave address
 - select a specific port or leave auto-detect enabled
+- the current connection dialog is a separate window opened from the top menu
 
 The app can also use a fixed port from:
 
 - `source_files/dps5005_limits.ini`
 
 If no fixed port is set, it scans available serial ports and tries to detect the device automatically.
+
+<img src="images/connection_dialog_current.jpg">
 
 On Linux, if the PSU is not detected, check permissions for devices such as:
 
@@ -102,8 +105,6 @@ Example files are included:
 
 - `source_files/Sample.csv`
 - `source_files/Sample_led.csv`
-
-<img src="images/CSVview.png">
 
 ## Configuration
 
@@ -149,3 +150,158 @@ To build on Linux:
 You are responsible for safe PSU, battery, and wiring limits.
 
 The application applies configured bounds from `dps5005_limits.ini`, but those bounds still need to match your actual hardware and charging scenario.
+
+---
+
+# XY6015L_pyGUI українською
+
+Кросплатформний застосунок на PyQt5 для моніторингу та керування блоком живлення `XY6015L` через Modbus RTU.
+
+## Що вміє програма
+
+- Підключатися до блоку живлення через serial Modbus RTU
+- Читати напругу, струм, потужність, температуру та службові стани
+- Задавати обмеження напруги та струму
+- Будувати живі графіки напруги і струму через `pyqtgraph`
+- Експортувати записані вимірювання в CSV
+- Завантажувати і виконувати CSV-сценарії
+- Працювати в режимах PSU, NiMH/NiCad та Li-Ion/LiPo
+- Блокувати кнопки на пристрої, якщо це підтримується апаратно
+
+<img src="images/current_ui.jpg">
+
+## Стан проєкту
+
+Основний застосунок написаний на Python 3 і запускається з одного й того ж коду і в Linux, і у Windows.
+
+Файли на кшталт:
+
+- `run_program.bat`
+- `run_program.sh`
+- `install_requirements.bat`
+- `install_requirements.sh`
+- `build_exe.bat`
+- `build_app.sh`
+
+це лише допоміжні скрипти. Вони не є ядром програми.
+
+Основна точка входу:
+
+- `source_files/dps_GUI_program.py`
+
+## Залежності
+
+- Python 3
+- `PyQt5`
+- `pyserial`
+- `MinimalModbus`
+- `pyqtgraph`
+- `numpy`
+- доступ до serial-пристрою, до якого підключений блок живлення
+
+## Рекомендоване встановлення
+
+Найкраще використовувати локальне віртуальне середовище в теці репозиторію:
+
+```bash
+./install_requirements.sh
+```
+
+## Запуск
+
+Із кореня репозиторію:
+
+```bash
+./run_program.sh
+```
+
+Якщо не хочете використовувати `venv`:
+
+```bash
+python3 -m pip install -r source_files/requirements.txt
+python3 source_files/dps_GUI_program.py
+```
+
+## Підключення по serial
+
+У самій програмі:
+
+- відкрийте `Connection -> Connection...`
+- виберіть baud rate і slave address
+- виберіть конкретний порт або залиште auto-detect
+- діалог підключення відкривається окремим вікном із верхнього меню
+
+Також можна зафіксувати порт у:
+
+- `source_files/dps5005_limits.ini`
+
+Якщо фіксований порт не заданий, програма сканує доступні serial-порти і пробує знайти пристрій автоматично.
+
+<img src="images/connection_dialog_current.jpg">
+
+У Linux, якщо пристрій не знаходиться, перевірте доступ до портів на кшталт:
+
+- `/dev/ttyUSB*`
+- `/dev/ttyACM*`
+
+## Робота з CSV
+
+Програма підтримує два основні сценарії роботи з CSV.
+
+1. Автоматизація
+
+Завантажте CSV через `File -> Open`, після чого використайте `CSV run`, щоб виконати кроки на блоці живлення.
+
+2. Попередній перегляд
+
+Кнопка `CSV view` дозволяє переглянути завантажені дані на графіку до встановлення serial-з’єднання.
+
+Приклади файлів уже є в репозиторії:
+
+- `source_files/Sample.csv`
+- `source_files/Sample_led.csv`
+
+## Конфігурація
+
+Основний runtime-конфіг лежить тут:
+
+- `source_files/dps5005_limits.ini`
+
+У цьому файлі задаються:
+
+- мінімальні і максимальні значення, які можна писати в пристрій
+- десяткові розряди для перетворення регістрів
+- кольори графіків і товщина ліній
+- опціональний фіксований serial-порт
+
+Це також головне місце для адаптації програми під схожі пристрої серії `DPSxxxx`.
+
+## Структура репозиторію
+
+- `source_files/dps_GUI_program.py`: головний GUI-застосунок
+- `source_files/dps_modbus.py`: Modbus-комунікація і обгортка над пристроєм
+- `source_files/dps_GUI.ui`: головний інтерфейс із Qt Designer
+- `source_files/connection_dialog.ui`: діалог підключення
+- `source_files/requirements.txt`: Python-залежності
+- `XYGUI.spec`: файл збірки PyInstaller
+
+## Збірка
+
+У репозиторії є:
+
+- `XYGUI.spec`
+- `build_app.sh`
+
+Цей `spec`-файл використовується для збірки через PyInstaller і включає `.ui` файли, іконки та `dps5005_limits.ini`.
+
+Для збірки в Linux:
+
+```bash
+./build_app.sh
+```
+
+## Безпека
+
+Ви самі відповідаєте за безпечні значення для блоку живлення, акумуляторів і підключення.
+
+Програма використовує обмеження з `dps5005_limits.ini`, але вони все одно мають відповідати вашому реальному обладнанню і сценарію використання.
