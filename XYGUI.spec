@@ -1,7 +1,9 @@
 from pathlib import Path
 
 
-ROOT = Path(__file__).resolve().parent
+# PyInstaller executes the spec in its own context, where __file__ is not guaranteed.
+# Both build helper scripts invoke PyInstaller from the repository root, so use cwd.
+ROOT = Path.cwd().resolve()
 SOURCE_DIR = ROOT / "source_files"
 
 
