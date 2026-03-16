@@ -1,11 +1,20 @@
-# -*- mode: python ; coding: utf-8 -*-
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parent
+SOURCE_DIR = ROOT / "source_files"
 
 
 a = Analysis(
-    ['source_files\\dps_GUI_program.py'],
-    pathex=[],
+    [str(SOURCE_DIR / 'dps_GUI_program.py')],
+    pathex=[str(ROOT)],
     binaries=[],
-    datas=[('source_files\\dps_GUI.ui', '.'), ('source_files\\connection_dialog.ui', '.'), ('source_files\\dps5005_limits.ini', '.'), ('source_files\\icon', 'icon')],
+    datas=[
+        (str(SOURCE_DIR / 'dps_GUI.ui'), '.'),
+        (str(SOURCE_DIR / 'connection_dialog.ui'), '.'),
+        (str(SOURCE_DIR / 'dps5005_limits.ini'), '.'),
+        (str(SOURCE_DIR / 'icon'), 'icon'),
+    ],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

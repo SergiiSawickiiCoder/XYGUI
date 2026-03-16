@@ -1,119 +1,151 @@
 # XY6015L_pyGUI
-A python GUI to display &amp; control XY6015L power supply
 
-* Hardware: XY6015L
+Cross-platform PyQt5 desktop application for monitoring and controlling an `XY6015L` power supply over Modbus RTU.
 
-## Program:
-What can it do:
-* connect to serial port
-* switch output ON/OFF
-* set voltage & current levels
-* display voltage &amp; current in chart
-* export voltage &amp; current from chart as *.CSV
-* lock hardware buttons
-* load, view and run *.CSV file (time, voltage & current)
+## What it does
+
+- Connects to the PSU over a serial Modbus RTU link
+- Reads live voltage, current, power, temperature, and status values
+- Lets you set voltage and current limits
+- Plots live voltage/current data with `pyqtgraph`
+- Exports recorded measurements to CSV
+- Loads and runs CSV-based automation steps
+- Supports basic PSU mode, NiMH/NiCad mode, and Li-Ion/LiPo mode
+- Can lock front-panel buttons on supported hardware
 
 <img src="images/ProgramConnected.png">
 
-## Serial port:
-* select baud rate (must match hardware configuration)
-* select slave address (must match hardware configuration)
-* Connect - automatically searches and connects to port (button status shows 'Connected' or 'Disconnected')
-(only tested in linux but should work with windows)
-* New feature - serial port can be fixed by modifying 'port_set' parameter within 'dps5005_limits.ini'
+## Project status
+
+The core application is Python 3 based and runs from the same source on Linux and Windows.
+
+Platform-specific files in the repository such as:
+
+- `run_program.bat`
+- `run_program.sh`
+- `install_requirements.bat`
+- `install_requirements.sh`
+- `build_exe.bat`
+- `build_app.sh`
+
+are only helper scripts. They are not the application itself.
+
+The real application entrypoint is:
+
+- `source_files/dps_GUI_program.py`
+
+## Requirements
+
+- Python 3
+- `PyQt5`
+- `pyserial`
+- `MinimalModbus`
+- `pyqtgraph`
+- `numpy`
+- Access to the serial device connected to the PSU
+
+## Recommended setup
+
+Use a local virtual environment inside the repository:
+
+```bash
+./install_requirements.sh
+```
+
+## Run
+
+From the repository root:
+
+```bash
+./run_program.sh
+```
+
+If you do not want to use a virtual environment:
+
+```bash
+python3 -m pip install -r source_files/requirements.txt
+python3 source_files/dps_GUI_program.py
+```
+
+## Serial connection
+
+Inside the app:
+
+- open `Connection -> Connection...`
+- choose baud rate and slave address
+- select a specific port or leave auto-detect enabled
+
+The app can also use a fixed port from:
+
+- `source_files/dps5005_limits.ini`
+
+If no fixed port is set, it scans available serial ports and tries to detect the device automatically.
+
+On Linux, if the PSU is not detected, check permissions for devices such as:
+
+- `/dev/ttyUSB*`
+- `/dev/ttyACM*`
+
+## CSV workflow
+
+The application supports two CSV use cases.
+
+1. Automation
+
+Load a CSV file through `File -> Open`, then use `CSV run` to apply the steps to the power supply.
+
+2. Preview
+
+Use `CSV view` to preview loaded CSV data on the graph before establishing a serial connection.
+
+Example files are included:
+
+- `source_files/Sample.csv`
+- `source_files/Sample_led.csv`
 
 <img src="images/CSVview.png">
 
-## CSV
-CSV now has 2 functions:
-1. Preconfigured files can be imported to allow automated output control of the PSU. 
-'Sample.csv' is provided as an example.
-File -> Open, to load pre-configured *.CSV file, it then displays number of remaining steps.
-Select 'CSV run' to action the file. Select 'CSV clear' to remove unwanted remaining steps.
+## Configuration
 
-2. Imported CSV files can be viewed prior to Serial port connection using ‘CSV view’ button. This function is unavailable when Serial communications is established.
+Main runtime configuration lives in:
 
-## PSU 
-Basic Power supply mode
-* set Voltage limit
-* set Current limit
-* press 'Set' to load parameters then 'ON' to begin
+- `source_files/dps5005_limits.ini`
 
-## Battery Charging
-NiCad/NiMH - based on (-dV) negative delta V or better known as Peak Detect.
-* set absolute maximum safe charging voltage 'Voltage Max'
-* set 'Constant Current'
-* set 'Terminate (-dV)'
-* press 'Set' to load parameters then 'ON' to begin
+This file controls:
 
-Li-Ion/Lipo - based CCCV using taper current as termination.
-* set 'Constant Voltage'
-* set 'Constant Current'
-* set 'Terminate (A)'
-* press 'Set' to load parameters then 'ON' to begin
+- min/max values written to the device
+- decimal precision used for register conversion
+- graph colors and line widths
+- optional fixed serial port
 
-Note: Termination control begins 5seconds after charge start allowing current to stabilise.
+That file is also the main place to adapt the app for similar `DPSxxxx`-style devices.
 
-Disclaimer: User is responsible for safety. Program allows flexibility choose your values carefully.
+## Repository layout
 
-## Using other 'DPSxxxx' units
-Configuring this program for other 'DPSxxxx' units should hopefully be straight forward to achieve by modifying the parameters within this file 'dps5005_limits.ini'. 
-* adjust the safety levels, Max/Min values
-* adjust the decimal point position
+- `source_files/dps_GUI_program.py`: main GUI application
+- `source_files/dps_modbus.py`: Modbus communication and device wrapper
+- `source_files/dps_GUI.ui`: main Qt Designer UI file
+- `source_files/connection_dialog.ui`: connection dialog UI
+- `source_files/requirements.txt`: Python dependencies
+- `XYGUI.spec`: PyInstaller spec file
 
-## Chart colours
-The background, axis & pen colours and line (pen) width may be manipulated within the Section Three of the 'dps5005_limits.ini' file. Two examples exist.
-* background colour
-* axis colour
-* pen colour
-* pen weight
+## Packaging
 
-## Requirements:
-* Python2
-```
-pip install pyserial
-pip install MinimalModbus
-pip install PyQt5
-pip install pyqtgraph
-```
-```
-if using python2.7: 
-  pip install configparser
-```
-OR
-```
-pip install -r requirements.txt
-```
-* Python3
-```
-pip3 install pyserial
-pip3 install MinimalModbus
-pip3 install PyQt5
-pip3 install pyqtgraph
-```
-OR
-```
-pip3 install -r requirements.txt
-```
-## Developed with:
-* dps_GUI.ui         - QT designer v5.9.2
-* dps_GUI_program.py - Python 2.7.14
-* dps_modbus.py      - Python 2.7.14
-* dps5005_limits.ini - text file
+The repository contains:
 
-## Run:
+- `XYGUI.spec`
+- `build_app.sh`
 
+This is the current PyInstaller spec file. It bundles the `.ui` files, icons, and `dps5005_limits.ini`.
+
+To build on Linux:
+
+```bash
+./build_app.sh
 ```
-cd DPS5005_pyGUI/source_files/
-```
-```
-python dps_GUI_program.py
-```
-OR
-```
-python3 dps_GUI_program.py
-```
-OR on Windows
-```
-run_program.bat
-```
+
+## Safety
+
+You are responsible for safe PSU, battery, and wiring limits.
+
+The application applies configured bounds from `dps5005_limits.ini`, but those bounds still need to match your actual hardware and charging scenario.
